@@ -8,7 +8,7 @@ import (
 )
 
 func main() {
-	fmt.Println("Hello World")
+	fmt.Println("Server starting")
 
 	navigationService := services.NavigationService{}
 	webServer := server.MakeNewWebServer(navigationService)
