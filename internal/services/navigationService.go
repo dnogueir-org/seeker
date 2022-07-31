@@ -1,7 +1,8 @@
 package services
 
 import (
-	"fmt"
+	"github.com/dnogueir-org/seeker/internal/converters"
+	"github.com/dnogueir-org/seeker/repository/indexers"
 )
 
 type NavigationRequest struct {
@@ -14,11 +15,13 @@ type NavigationRequest struct {
 	Fields         []string
 }
 
-type NavigationService struct{}
+type NavigationService struct {
+	Indexer indexers.Indexer
+}
 
-func (ns *NavigationService) Navigate(request NavigationRequest) (string, error) {
-	for _, v := range request.Fields {
-		fmt.Println(v)
-	}
-	return "teste", nil
+func (ns *NavigationService) Navigate(request NavigationRequest) (interface{}, error) {
+	filterFields := converters.ConvertFilterField(request.Fields)
+	indexerResponse := ns.Indexer.Navigate(request.Page, request.ResultsPerPage, request.Sorting, request.ScoringProfile, filterFields)
+
+	return indexerResponse, nil
 }
