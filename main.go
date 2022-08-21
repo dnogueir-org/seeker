@@ -17,7 +17,7 @@ func main() {
 	fmt.Println("Server starting")
 
 	cfg := elasticsearch.Config{
-		Addresses: []string{"http://fisia-indexer.dev.gcp.gruposbf.com.br"},
+		Addresses: []string{"http://fisia-indexer.prd.gcp.gruposbf.com.br"},
 		Transport: &http.Transport{
 			MaxIdleConnsPerHost:   10,
 			ResponseHeaderTimeout: 3 * time.Second,
