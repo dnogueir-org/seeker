@@ -15,15 +15,14 @@ type ElasticsearchIndexer struct {
 	IndexName     string
 }
 
-func (esi *ElasticsearchIndexer) Navigate(page, resultsPerPage int, sorting, scoringProfile string, fields []entity.Field) []IndexResponse {
+func (esi *ElasticsearchIndexer) Navigate(page, resultsPerPage int, sorting, scoringProfile string, fields []entity.Field) IndexResponseHits {
 
-	//response := esi.getDocById("01399016")
 	response := esi.getDocumentsByFields(page, resultsPerPage, fields)
 
 	return response
 }
 
-func (esi *ElasticsearchIndexer) getDocumentsByFields(page, resultsPerPage int, fields []entity.Field) []IndexResponse {
+func (esi *ElasticsearchIndexer) getDocumentsByFields(page, resultsPerPage int, fields []entity.Field) IndexResponseHits {
 
 	query := `{
 		"query":{
@@ -51,54 +50,21 @@ func (esi *ElasticsearchIndexer) getDocumentsByFields(page, resultsPerPage int, 
 	)
 	if err != nil {
 		fmt.Println(err.Error())
-		return []IndexResponse{}
+		return IndexResponseHits{}
 	}
 	defer res.Body.Close()
 
 	var (
-		response []IndexResponse
-		body     indexHits
+		response IndexResponseHits
+		hits     IndexHits
 	)
 
-	if err := json.NewDecoder(res.Body).Decode(&body.Hits); err != nil {
-		fmt.Println(err.Error())
-		return []IndexResponse{}
-	}
+	hits.Hits = &response
 
-	for _, v := range body.Hits {
-		response = append(response, v.Source)
+	if err := json.NewDecoder(res.Body).Decode(&hits); err != nil {
+		fmt.Println(err.Error())
+		return IndexResponseHits{}
 	}
 
 	return response
 }
-
-// func (esi *ElasticsearchIndexer) getDocById(modelColor string) IndexResponse {
-
-// 	req := esapi.GetRequest{
-// 		Index:      esi.IndexName,
-// 		DocumentID: modelColor,
-// 	}
-
-// 	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Second)
-// 	defer cancel()
-
-// 	res, err := req.Do(ctx, esi.ElasticClient)
-// 	if err != nil {
-// 		fmt.Println(err.Error())
-// 		return IndexResponse{}
-// 	}
-// 	fmt.Println(res)
-// 	defer res.Body.Close()
-
-// 	var (
-// 		response IndexResponse
-// 		body     document
-// 	)
-// 	body.Source = &response
-
-// 	if err := json.NewDecoder(res.Body).Decode(&body); err != nil {
-// 		return IndexResponse{}
-// 	}
-
-// 	return response
-// }

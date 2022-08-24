@@ -3,17 +3,28 @@ package indexers
 import "github.com/dnogueir-org/seeker/internal/entity"
 
 type Indexer interface {
-	Navigate(page, resultsPerPage int, sorting, scoringProfile string, fields []entity.Field) []IndexResponse
+	Navigate(page, resultsPerPage int, sorting, scoringProfile string, fields []entity.Field) IndexResponseHits
 }
 
-type indexHits struct {
-	Hits []document `json:"hits"`
-}
-type document struct {
-	Source IndexResponse `json:"_source"`
+type IndexHits struct {
+	Hits interface{} `json:"hits"`
 }
 
-type IndexResponse struct {
+type IndexResponseHits struct {
+	Total IndexTotalHits      `json:"total"`
+	Hits  []IndexDocumentHits `json:"hits"`
+}
+
+type IndexTotalHits struct {
+	Value int `json:"value"`
+}
+
+type IndexDocumentHits struct {
+	Id     string   `json:"_id"`
+	Source Document `json:"_source"`
+}
+
+type Document struct {
 	Name               string             `json:"name"`
 	Nickname           string             `json:"nickname"`
 	Description        string             `json:"description"`
@@ -33,7 +44,7 @@ type IndexResponse struct {
 	ModelColor         string             `json:"modelColor"`
 	BasePrice          float64            `json:"basePrice"`
 	PromotionalPrice   float64            `json:"promotionalPrice"`
-	Discount           int                `json:"discount"`
+	Discount           float64            `json:"discount"`
 	ColorName          string             `json:"colorName"`
 	ColorID            string             `json:"colorId"`
 	HasStock           bool               `json:"hasStock"`
