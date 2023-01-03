@@ -20,10 +20,8 @@ func Navigate(service services.NavigationService) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("Content-Type", "Application/json")
 
-		businessUnitParam := r.URL.Query().Get("bu")
 		sortingParam := r.URL.Query().Get("sorting")
 		scoringProfileParam := r.URL.Query().Get("scoringProfile")
-		restrictSearchParam := r.URL.Query().Get("restrictSearch")
 		fieldsParam := r.URL.Query()["field"]
 		pageParam := r.URL.Query().Get("page")
 		resultsPerPageParam := r.URL.Query().Get("resultsPerPage")
@@ -40,20 +38,9 @@ func Navigate(service services.NavigationService) http.Handler {
 			return
 		}
 
-		var restrictSearch bool
-		if restrictSearchParam != "" {
-			restrictSearch, err = strconv.ParseBool(restrictSearchParam)
-			if err != nil {
-				common.BadRequest(w, "restrictSearch param should be a boolean")
-				return
-			}
-		}
-
 		request := services.NavigationRequest{
-			BusinessUnit:   businessUnitParam,
 			Sorting:        sortingParam,
 			ScoringProfile: scoringProfileParam,
-			RestrictSearch: restrictSearch,
 			Fields:         fieldsParam,
 			Page:           page,
 			ResultsPerPage: resultsPerPage,

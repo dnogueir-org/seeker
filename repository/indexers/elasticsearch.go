@@ -25,17 +25,17 @@ func (esi *ElasticsearchIndexer) Navigate(page, resultsPerPage int, sorting, sco
 func (esi *ElasticsearchIndexer) getDocumentsByFields(page, resultsPerPage int, fields []entity.Field) IndexResponseHits {
 
 	query := `{
-		"query":{
-			"bool":{
-				 "must":[
-						{
-							 "term":{
-									"filters.genero.value":{
-										 "value":"masculino"
-									}
-							 }
+		"query": {
+			"bool": {
+				"must": [
+					{
+						"term":{
+							"filters.genero.value":{
+								"value":"masculino"
+							}
 						}
-				 ]
+					}
+				]
 			}
 	 }
 	}`

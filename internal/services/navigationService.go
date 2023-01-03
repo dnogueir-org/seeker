@@ -6,10 +6,8 @@ import (
 )
 
 type NavigationRequest struct {
-	BusinessUnit   string
 	Page           int
 	ResultsPerPage int
-	RestrictSearch bool
 	Sorting        string
 	ScoringProfile string
 	Fields         []string
